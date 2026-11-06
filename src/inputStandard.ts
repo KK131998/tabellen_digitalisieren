@@ -16,6 +16,7 @@ export const INPUT_STANDARD = {
     'Score',
     'Zu Zahlen',
     'Gezahlt',
+    'Gespendet',
   ] as const,
   rows: [
     'Bebber',
