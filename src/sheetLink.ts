@@ -1,4 +1,3 @@
-import { bundledSheetLink, clearedSheetLinkRaw, isClearedSheetLink } from "./bundledSheet";
 import { columnLetter } from "./columnLetter";
 
 const STORAGE_KEY = "tabellen.sheet-link";
@@ -29,8 +28,7 @@ export type SheetLink = {
 export function readSheetLink(): SheetLink | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return bundledSheetLink();
-    if (isClearedSheetLink(raw)) return null;
+    if (!raw) return null;
     const parsed = JSON.parse(raw) as SheetLink;
     if (!parsed.url || !parsed.spreadsheetId || !parsed.name) return null;
     if (
@@ -51,7 +49,7 @@ export function readSheetLink(): SheetLink | null {
 
 export function writeSheetLink(link: SheetLink | null) {
   if (!link) {
-    localStorage.setItem(STORAGE_KEY, clearedSheetLinkRaw());
+    localStorage.removeItem(STORAGE_KEY);
     return;
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(link));

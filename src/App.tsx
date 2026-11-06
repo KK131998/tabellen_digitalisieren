@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { applyBundledLabels } from "./bundledSheet";
 import { planCells, valuesFromTable } from "./cellPlan";
 import {
   googleClientId,
@@ -21,6 +20,7 @@ import {
   columnLabelsFor,
   linkWithColumnLabels,
   readSheetLink,
+  sheetLinkFromUrl,
   targetSheetIdsFor,
   writeSheetLink,
   type ColumnEntry,
@@ -170,10 +170,7 @@ function App() {
           return current;
         const name = sheet.title;
         const sheetId = current.sheetId ?? sheet.sheetId;
-        const moved = applyBundledLabels(
-          claimDefaultColumnLabels(current, sheetId),
-          sheet.sheets,
-        );
+        const moved = claimDefaultColumnLabels(current, sheetId);
         const sameSheets =
           moved.sheets?.length === sheet.sheets.length &&
           moved.sheets.every(
@@ -181,14 +178,11 @@ function App() {
               item.id === sheet.sheets[index]?.id &&
               item.title === sheet.sheets[index]?.title,
           );
-        const sameLabels =
-          JSON.stringify(moved.columnLabels ?? {}) ===
-          JSON.stringify(current.columnLabels ?? {});
         if (
           moved.name === name &&
           moved.sheetId === sheetId &&
           sameSheets &&
-          sameLabels
+          moved === current
         )
           return current;
         const updated = { ...moved, name, sheetId, sheets: sheet.sheets };
@@ -421,6 +415,14 @@ function App() {
       : `${written} Ohne passende Schlüsselwörter: ${skipped.join(", ")}.`;
   }
 
+  function saveSheetLink(value: string) {
+    const link = sheetLinkFromUrl(value);
+    writeSheetLink(link);
+    setWorksheets([]);
+    setColumnsError(null);
+    setSheetLink(link);
+  }
+
   function clearSheetLink() {
     writeSheetLink(null);
     setSheetLink(null);
@@ -520,6 +522,7 @@ function App() {
         {screen === "settings" ? (
           <SettingsPage
             link={sheetLink}
+            onSave={saveSheetLink}
             onClear={clearSheetLink}
             authConfigured={Boolean(googleClientId)}
             accountName={accountName}

@@ -269,6 +269,33 @@
   color: var(--muted);
 }
 
+.link-form {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+.link-form label {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.link-form input {
+  min-height: 2.8rem;
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.link-form input:focus-visible {
+  outline: 3px solid #8fbfa8;
+  outline-offset: 2px;
+}
+
 .link-card {
   margin-top: 1.1rem;
   padding: 0.95rem;
